@@ -26,7 +26,7 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     container:
-      image: tigergate/tigergate-cli:1.0.0
+      image: tigergate/tigergate-cli:latest
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
