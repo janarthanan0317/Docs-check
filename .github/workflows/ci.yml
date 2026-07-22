@@ -1,84 +1,33 @@
 name: TigerGate Security
-
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-
-permissions:
-  contents: read
 
 env:
   TIGERGATE_API_KEY: ${{ secrets.TIGERGATE_API_KEY }}
-  # Uncomment if your production environment requires it.
-  # TIGERGATE_API_URL: https://api.tigergate.dev/api/ci
 
 jobs:
   pr-scan:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-
     container:
       image: tigergate/tigergate-cli:1.0.0
-
     permissions:
       contents: read
-      pull-requests: write
-      statuses: write
-
+      pull-requests: write   # PR summary comment
+      statuses: write        # commit status
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Verify API Key
-        run: |
-          if [ -z "$TIGERGATE_API_KEY" ]; then
-            echo "TIGERGATE_API_KEY is missing"
-            exit 1
-          fi
-          echo "API Key found"
-
-      - name: TigerGate PR Scan
-        run: |
-          tigergate scan \
-            --type all \
-            --scan-scope diff \
-            --upload
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }   # full history for the diff gate
+      - run: tigergate scan --type all --scan-scope diff --upload
 
   full-scan:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
-
     container:
       image: tigergate/tigergate-cli:1.0.0
-
-    permissions:
-      contents: read
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Verify API Key
-        run: |
-          if [ -z "$TIGERGATE_API_KEY" ]; then
-            echo "TIGERGATE_API_KEY is missing"
-            exit 1
-          fi
-          echo "API Key found"
-
-      - name: TigerGate Full Scan
-        run: |
-          tigergate scan \
-            --type all \
-            --scan-scope full \
-            --upload
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - run: tigergate scan --type all --scan-scope full --upload
