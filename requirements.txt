@@ -1,8 +1,6 @@
-# Software Composition Analysis (SCA / SAS) Test Dependencies
-# Containing known vulnerable package versions with published CVEs
-
-Flask==0.12.2        # Known Vulnerability: CVE-2018-1000656 (DoS via denial-of-service in cookie handling)
-PyYAML==5.3          # Known Vulnerability: CVE-2020-14343 (Arbitrary Code Execution via load())
-requests==2.20.0     # Known Vulnerability: CVE-2018-18074 (Information Disclosure in HTTP redirects)
-urllib3==1.24.2      # Known Vulnerability: CVE-2019-11324, CVE-2019-11236 (CRLF injection & Certificate verification bypass)
-Jinja2==2.10         # Known Vulnerability: CVE-2019-10906 (Sandbox breakout vulnerability)
+# Runtime dependencies. Versions are pinned for reproducible, patched builds.
+Flask==3.1.2
+PyYAML==6.0.2
+requests==2.32.4
+urllib3==2.5.0
+Jinja2==3.1.6
