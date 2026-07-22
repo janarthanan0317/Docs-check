@@ -52,7 +52,7 @@ jobs:
       contents: read
 
     container:
-      image: tigergate/tigergate-cli:1.0.0
+      image: tigergate/tigergate-cli:lastest
 
     steps:
       - name: Checkout
