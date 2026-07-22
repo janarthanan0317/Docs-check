@@ -1,0 +1,33 @@
+name: TigerGate Security
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  TIGERGATE_API_KEY: ${{ secrets.TIGERGATE_API_KEY }}
+
+jobs:
+  pr-scan:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    container:
+      image: tigergate/tigergate-cli:1.0.0
+    permissions:
+      contents: read
+      pull-requests: write   # PR summary comment
+      statuses: write        # commit status
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }   # full history for the diff gate
+      - run: tigergate scan --type all --scan-scope diff --upload
+
+  full-scan:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    container:
+      image: tigergate/tigergate-cli:1.0.0
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - run: tigergate scan --type all --scan-scope full --upload
